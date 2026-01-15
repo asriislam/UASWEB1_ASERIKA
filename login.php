@@ -1,38 +1,51 @@
-// Proses login
+<?php
+session_start();
+include "koneksi.php"; // Menghubungkan ke database agar $conn terdefinisi
 
-if ($_SERVER['REQUEST_METHOD'] = 'POST') {
-    $email = $_POST['email'] ?? '';
-    $password = $_POST['password'] ?? '';
-    $result = mysqli_query($conn, "SELECT FROM users WHERE email='$email'");
-    if ($row = mysqli_fetch_assoc($result)) {
-        if ($password = $row['password']) {
-            $_SESSION['email'] = $row['email'];
-            $_SESSION['name'] = $row['name'];
-            $_SESSION['role'] = $row['role'];
-            header("Location: dashboard.php");
-            exit;
-        } else {
-            $error = "Password salah.";
-        }
+if (isset($_POST['login'])) {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+
+    // Mengambil data user berdasarkan username
+    // Disarankan menggunakan password_verify jika password di-hash, 
+    // tapi ini contoh standar untuk pemula:
+    $query = mysqli_query($conn, "SELECT * FROM users WHERE username='$username' AND password='$password'");
+    
+    // Cek apakah data ditemukan
+    if (mysqli_num_rows($query) > 0) {
+        $data = mysqli_fetch_assoc($query);
+        $_SESSION['status'] = "login";
+        $_SESSION['username'] = $data['username'];
+        
+        echo "<script>alert('Login Berhasil!'); window.location='index.php';</script>";
+    } else {
+        echo "<script>alert('Username atau Password Salah!');</script>";
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Halaman Login</title>
+</head>
 <body>
-<div class="login-card">
-<h2>POLGAN MART</h2>
-<?php if (!empty($error)) echo "<div class='error'>$error</div>"; ?>
-<form method="post">
-<div class="form-group">
-<label for="email">Email</label>
-<input type="email" id="email" nome="email" placehołder="Masukkan email anda" required>
-</div>
-<div class="form-group">
-<label for="password">Password</label>
-<input type="password" id="password" name="password" placeholder="Masukkan password" required>
-</div>
-<button type="submit" class="btn">Login</button>
-<button type="reset" class="btn-reset">Batal</button>
-</form>
-<div class="footer">
-<p>© 2026 POLGAN MART</p>
-</div>
-</div>
+    <h2>Login Sistem Penjualan</h2>
+    <form method="POST" action="">
+        <table>
+            <tr>
+                <td>Username</td>
+                <td><input type="text" name="username" required></td>
+            </tr>
+            <tr>
+                <td>Password</td>
+                <td><input type="password" name="password" required></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><button type="submit" name="login">Login</button></td>
+            </tr>
+        </table>
+    </form>
 </body>
-</html>    
+</html>

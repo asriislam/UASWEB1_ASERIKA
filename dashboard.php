@@ -119,7 +119,7 @@ session_start();
 <div class="content">
     <?php
     $page = $_GET['page'] ?? 'home';
-    $file = "pages/$page.php";
+    $file = "page/$page.php";
     if (file_exists($file)) {
         include $file;
     } else {

@@ -1,14 +1,4 @@
 <?php
-$host = "localhost";
-$username = "root";
-$password = "";
-$dbname = "db_penjualan2";
+$conn = mysqli_connect("localhost","root","","db_penjualan2");
 
-
-$conn = new mysqli($host, $username, $password, $dbname);
-
-
-if ($conn->connect_error) {
-    die("koneksi gagal: " . $conn->connect_error);
-}
-// echo "koneksi berhasil";
+?>
